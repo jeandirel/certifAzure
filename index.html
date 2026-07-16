@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI-103 Practice Exam</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1b2c;--panel2:#14283e;--line:#28445f;--text:#eef6ff;--muted:#a7b8cb;--blue:#2ea7ff;--green:#3ddc97;--red:#ff6b7d;--amber:#ffc857}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#07111f,#0b1d33);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;min-height:100vh}.wrap{max-width:1000px;margin:auto;padding:24px}.hero{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:18px}.hero h1{margin:0;font-size:1.7rem}.hero p{color:var(--muted);margin:.45rem 0 0}.badge{padding:10px 14px;border:1px solid var(--line);border-radius:999px;color:var(--muted);white-space:nowrap}.card{background:rgba(13,27,44,.97);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:0 28px 70px rgba(0,0,0,.28)}.notice{background:#2b2517;border-left:4px solid var(--amber);padding:12px 14px;border-radius:8px;color:#ffe9a8;line-height:1.5;margin-bottom:18px}.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin-bottom:20px}.progress{height:10px;background:#06101c;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#2ea7ff,#7bd3ff)}.stat{background:var(--panel2);padding:9px 12px;border-radius:10px;color:var(--muted);white-space:nowrap}.qmeta{color:var(--blue);font-weight:800;margin-bottom:10px}.question{font-size:1.16rem;line-height:1.55;white-space:pre-line}.option{display:flex;gap:12px;width:100%;text-align:left;background:#0a192a;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:10px 0;cursor:pointer;font-size:1rem;line-height:1.45}.option:hover{border-color:#4d82af}.option.selected{background:#10304f;border-color:var(--blue)}.option.correct{background:#113a2d;border-color:var(--green)}.option.wrong{background:#44202a;border-color:var(--red)}.letter{display:grid;place-items:center;min-width:29px;height:29px;border-radius:50%;background:#193650;font-weight:800}.actions{display:flex;justify-content:space-between;gap:10px;margin-top:20px;flex-wrap:wrap}button{border:0;border-radius:11px;padding:11px 16px;font-weight:800;cursor:pointer}.primary{background:var(--blue);color:#001522}.secondary{background:#1b3551;color:var(--text)}.success{background:#184232;color:#d9ffed}.danger{background:#4b202b;color:#ffe4e8}button:disabled{opacity:.5;cursor:not-allowed}.hidden{display:none!important}.feedback{margin-top:18px;padding:16px;border-radius:14px;background:#091827;border:1px solid var(--line)}.feedback h3{margin-top:0}.good{color:var(--green)}.bad{color:var(--red)}.explain{color:#d4e0eb;line-height:1.55}.takeaway{margin-top:12px;padding:12px;background:#10253a;border-radius:10px;color:#bfe4ff}.start{text-align:center}.start h2{font-size:2rem}.start p{color:var(--muted);line-height:1.6;max-width:700px;margin:0 auto 20px}.result{text-align:center}.score{font-size:4rem;color:var(--blue);font-weight:900}.review-card{background:#091827;border:1px solid var(--line);border-radius:15px;padding:17px;margin:13px 0}.review-card h3{font-size:1rem;line-height:1.5}.multi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.select-row{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;align-items:center;margin:12px 0}.select-row select{width:100%;padding:11px;border-radius:10px;background:#0a192a;color:var(--text);border:1px solid var(--line)}@media(max-width:700px){.wrap{padding:12px}.hero{flex-direction:column}.toolbar{grid-template-columns:1fr 1fr}.progress{grid-column:1/-1}.multi-grid,.select-row{grid-template-columns:1fr}.card{padding:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div><h1>AI-103 Practice Exam</h1><p>Questions 1–10 from the provided study PDF, with detailed explanations.</p></div>
+    <div class="badge">Batch 1 · 10 questions</div>
+  </div>
+
+  <section id="start" class="card start">
+    <div class="notice">Training content reproduced from your uploaded AI-103 study PDF for personal revision.</div>
+    <h2>Ready to begin?</h2>
+    <p>Answer each question, validate it, and review the explanation before moving on. Your progress and score are stored locally in your browser.</p>
+    <button class="primary" onclick="startExam()">Start practice</button>
+  </section>
+
+  <section id="exam" class="card hidden">
+    <div class="toolbar"><div class="progress"><span id="bar"></span></div><div id="answered" class="stat">0/10</div><div id="scoreLive" class="stat">Score: 0</div></div>
+    <div id="qmeta" class="qmeta"></div>
+    <div id="question" class="question"></div>
+    <div id="answers"></div>
+    <div id="feedback" class="feedback hidden"></div>
+    <div class="actions">
+      <button id="prevBtn" class="secondary" onclick="move(-1)">Previous</button>
+      <div>
+        <button id="checkBtn" class="success" onclick="checkAnswer()">Check answer</button>
+        <button id="nextBtn" class="primary" onclick="move(1)">Next</button>
+        <button id="finishBtn" class="danger hidden" onclick="finishExam()">Finish</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" class="card result hidden">
+    <h2>Practice completed</h2><div id="finalScore" class="score"></div><p id="grade"></p>
+    <div class="actions" style="justify-content:center"><button class="primary" onclick="showReview(false)">Full review</button><button class="secondary" onclick="showReview(true)">Review mistakes</button><button class="secondary" onclick="restart()">Restart</button></div>
+  </section>
+
+  <section id="review" class="card hidden"><div class="actions" style="margin-top:0"><h2>Detailed review</h2><button class="secondary" onclick="backToResult()">Back</button></div><div id="reviewList"></div></section>
+</div>
+<script>
+const questions = [
+{
+ id:1,type:'single',topic:'Speech',question:`You are building a speech processing solution in Microsoft Foundry for a customer support platform.
+The platform will transcribe live phone calls so supervisors can view call transcripts and detect issues while calls are in progress. The audio arrives as a continuous stream.
+You need transcripts to appear within only a few seconds.
+What should you do?`,
+ options:[`Use text to speech by using a custom neural voice.`,`Use speech translation to generate transcripts into multiple languages.`,`Run a batch transcription job on recorded audio files.`,`Use real-time speech to text to process streaming audio input.`],answer:3,
+ explanation:`Real-time speech to text is built for low-latency transcription of streaming audio. It continuously converts live audio into text, which is appropriate for call monitoring, live captions, and immediate issue detection.`,
+ wrong:[`Text to speech converts text into spoken audio; it does not transcribe audio.`,`Speech translation translates speech into another language; translation is not required here.`,`Batch transcription processes completed recordings and cannot provide live transcripts.`],
+ takeaway:`Live stream + results within seconds = real-time speech to text. Recorded files + delayed processing = batch transcription.`
+},
+{
+ id:2,type:'single',topic:'Content Understanding',question:`You have a Microsoft Foundry project that contains an agent.
+The agent ingests scanned PDF vendor invoices that contain tables and embedded QR codes.
+The agent must preserve the PDF layout so downstream processing can reference sections and tables.
+You need to extract content and layout elements and detect QR codes without requiring a language model deployment.
+Which built-in analyzer should you use?`,
+ options:[`prebuilt-documentFieldSchema`,`prebuilt-read`,`prebuilt-documentSearch`,`prebuilt-layout`],answer:3,
+ explanation:`prebuilt-layout extracts document structure such as text, paragraphs, tables, selection marks, barcodes, and QR codes while preserving layout relationships.`,
+ wrong:[`prebuilt-documentFieldSchema focuses on predefined structured fields, not full layout preservation.`,`prebuilt-read primarily performs OCR and text extraction, without rich document structure.`,`prebuilt-documentSearch is intended for search and retrieval scenarios.`],
+ takeaway:`Need structure, tables, sections, barcodes, or QR codes = prebuilt-layout.`
+},
+{
+ id:3,type:'multiSelect',topic:'Prompt Shields',question:`An agent accepts user-uploaded screenshots and uses a multimodal chat model. Some screenshots may contain malicious embedded text.
+You need to prevent prompt injection and ensure third-party content is treated as lower trust.
+Select the two correct configurations.`,
+ options:[`Disable the shield.`,`Set action to block.`,`Set action to annotate.`,`Enable Spotlighting.`,`Create a custom blocklist.`,`Use OCR first.`],answer:[1,3],
+ explanation:`Set Prompt Shields to block so detected indirect prompt-injection attempts do not reach the model. Enable Spotlighting so external screenshots and documents are marked as lower-trust content.`,
+ wrong:[`Disabling removes protection.`,`Annotate detects but still allows the request, so it does not meet the requirement to prevent the attack.`,`A custom blocklist targets known words or phrases, not prompt injection trust boundaries.`,`OCR only extracts text; malicious instructions can still remain.`],
+ takeaway:`Prevent indirect injection = Prompt Shields for documents + Block. Lower-trust third-party content = Spotlighting.`
+},
+{
+ id:4,type:'single',topic:'Foundry Connections',question:`You are building App1, which generates responses by using a model deployed to Project1. Before prompts are sent to the model, App1 retrieves documents by using Azure AI Search.
+Requirements:
+• Multiple client applications must use the same search configuration.
+• Key-based authentication must be prevented.
+• Administrative effort must be minimized.
+What should you do?`,
+ options:[`Create a custom HTTP connection and configure endpoints separately per app.`,`Configure an Azure AI Search connection in Project1 and reference it in each application.`,`Call Azure AI Search directly from each application using Microsoft Entra authentication.`,`Enable a managed identity for each application and call Azure AI Search directly.`],answer:1,
+ explanation:`A project-level Azure AI Search connection centralizes endpoint and authentication configuration. It can use Microsoft Entra ID, avoids keys, and can be reused by multiple applications.`,
+ wrong:[`Per-app HTTP configuration increases administration.`,`Direct calls with Entra avoid keys but duplicate configuration in each app.`,`Managed identity is secure, but each application still needs its own separate setup.`],
+ takeaway:`Shared configuration across multiple apps = create a reusable Foundry project connection.`
+},
+{
+ id:5,type:'single',topic:'Observability',question:`A customer support agent calls an internal knowledge API tool before generating responses.
+Some requests take more than 15 seconds, and some responses are incorrect even when the API returns the expected data.
+You need to inspect individual runs and see the ordered sequence of LLM calls, tool invocations, and timing information.
+Which capability should you use?`,
+ options:[`Token usage`,`Monitoring`,`Safety metrics`,`Tracing`],answer:3,
+ explanation:`Tracing captures the detailed execution sequence of an individual run, including prompts, model calls, tool calls, responses, dependencies, order, and timing.`,
+ wrong:[`Token usage measures consumption, not execution flow.`,`Monitoring provides high-level aggregate trends rather than step-by-step run details.`,`Safety metrics focus on harmful or policy-violating content.`],
+ takeaway:`Need one run, ordered steps, tool calls, and timing = tracing.`
+},
+{
+ id:6,type:'mapping',topic:'Agent Tools',question:`Match each requirement to the correct Microsoft Foundry agent tool.`,
+ rows:[
+  {label:`Access up-to-date information from public websites`,options:[`Code interpreter`,`Computer use`,`File search`,`Grounding with Bing Search`,`Microsoft Fabric`],answer:`Grounding with Bing Search`},
+  {label:`Perform calculations during conversations`,options:[`Code interpreter`,`Computer use`,`File search`,`Grounding with Bing Search`,`Microsoft Fabric`],answer:`Code interpreter`},
+  {label:`Retrieve information from documents uploaded directly to the agent`,options:[`Code interpreter`,`Computer use`,`File search`,`Grounding with Bing Search`,`Microsoft Fabric`],answer:`File search`}
+ ],
+ explanation:`Grounding with Bing Search provides current public web information. Code Interpreter executes Python for calculations and analysis. File Search indexes and retrieves relevant content from uploaded files.`,
+ takeaway:`Current public web = Bing grounding. Calculations/data analysis = Code Interpreter. Uploaded documents = File Search.`
+},
+{
+ id:7,type:'single',topic:'OpenAPI Security',question:`An agent uses an OpenAPI 3.0 specification to call an external weather service.
+The service requires a key in an HTTP header, and the key value is stored as a connection in Project1.
+You need the key from the connection to be included automatically whenever the OpenAPI tool is invoked.
+What should you configure?`,
+ options:[`A header parameter defined for each operation`,`An Azure Key Vault connection`,`An API key security scheme`,`A Bearer token security scheme`],answer:2,
+ explanation:`An OpenAPI API key security scheme specifies how an API key is supplied, including its header name and location. Foundry can bind the stored connection value to that security scheme automatically.`,
+ wrong:[`A plain header parameter does not define standardized authentication or bind the connection automatically.`,`Key Vault may store a secret, but the OpenAPI document still needs the API key security scheme.`,`Bearer authentication is for OAuth/JWT bearer tokens, not header API keys.`],
+ takeaway:`OpenAPI header key from a Foundry connection = API key security scheme.`
+},
+{
+ id:8,type:'single',topic:'Agent Orchestration',question:`A project contains TriageAgent, PolicyAgent, and ActionAgent.
+Requirements:
+• Deterministic, step-based execution
+• Conditional branching
+• Shared state across agents
+• Optional ticket action based on triage
+• Minimum development effort
+What should you include?`,
+ options:[`A workflow`,`Threads and runs without a workflow`,`A multi-agent group chat session`,`Separate agent runs coordinated in application code`],answer:0,
+ explanation:`A Foundry workflow provides deterministic step-based orchestration, branching, shared state, and optional paths without requiring custom orchestration code.`,
+ wrong:[`Threads and runs manage conversations but do not provide built-in deterministic branching across agents.`,`Group chat is collaborative, not designed for predictable business workflows.`,`Custom coordination can work but increases development effort.`],
+ takeaway:`Deterministic steps + branching + shared state = workflow.`
+},
+{
+ id:9,type:'mapping',topic:'Evaluation Gates',question:`Configure the GitHub Actions workflow so production deployments use the latest approved evaluation baseline and stop when evaluation scores regress beyond tolerance.`,
+ rows:[
+  {label:`Evaluation comparison`,options:[`Compare against the latest approved baseline`,`Compare against the previous workflow run`,`Compare against production deployment logs`,`Compare against the repository default branch`],answer:`Compare against the latest approved baseline`},
+  {label:`If regression exceeds tolerance`,options:[`Continue deployment and send an alert`,`Fail the workflow`,`Retry evaluation automatically`,`Lock the target branch`],answer:`Fail the workflow`}
+ ],
+ explanation:`The workflow must compare the current evaluation against the latest approved quality baseline. If regression exceeds tolerance, failing the workflow enforces the quality gate and stops deployment.`,
+ takeaway:`Approved baseline + fail the workflow = enforceable production evaluation gate.`
+},
+{
+ id:10,type:'yesno',topic:'OpenTelemetry',question:`A Foundry project and a separate LangChain service send telemetry to the same Application Insights resource.
+For each statement, select Yes or No.`,
+ rows:[
+  {label:`The LangChain service will appear in Traces without configuring a tracer.`,answer:`No`},
+  {label:`Different OTEL_SERVICE_NAME values separate the services in Application Insights.`,answer:`Yes`},
+  {label:`With enable_content_recording=False, prompts and tool data will be captured in telemetry.`,answer:`No`}
+ ],
+ explanation:`LangChain needs an OpenTelemetry tracer and callback configuration. OTEL_SERVICE_NAME distinguishes services in the same Application Insights resource. Disabling content recording prevents prompts, responses, and tool data from being stored in telemetry.`,
+ takeaway:`Tracer required for LangChain. OTEL_SERVICE_NAME separates services. enable_content_recording=False protects sensitive content.`
+}
+];
+let current=0, answers=Array(questions.length).fill(null), checked=Array(questions.length).fill(false), score=0;
+function startExam(){document.getElementById('start').classList.add('hidden');document.getElementById('exam').classList.remove('hidden');render()}
+function render(){const q=questions[current];document.getElementById('qmeta').textContent=`Question ${q.id}/10 · ${q.topic}`;document.getElementById('question').textContent=q.question;document.getElementById('feedback').classList.add('hidden');document.getElementById('feedback').innerHTML='';const box=document.getElementById('answers');box.innerHTML='';
+ if(q.type==='single'||q.type==='multiSelect'){q.options.forEach((o,i)=>{const b=document.createElement('button');const selected=q.type==='single'?answers[current]===i:(answers[current]||[]).includes(i);b.className='option'+(selected?' selected':'');if(checked[current]){const good=q.type==='single'?i===q.answer:q.answer.includes(i);const chosen=q.type==='single'?answers[current]===i:(answers[current]||[]).includes(i);if(good)b.classList.add('correct');else if(chosen)b.classList.add('wrong')}b.innerHTML=`<span class="letter">${String.fromCharCode(65+i)}</span><span>${o}</span>`;b.onclick=()=>selectOption(i);box.appendChild(b)})}
+ else{q.rows.forEach((r,ri)=>{const row=document.createElement('div');row.className='select-row';const opts=q.type==='yesno'?['','Yes','No']:['',...r.options];row.innerHTML=`<strong>${r.label}</strong><select onchange="setRow(${ri},this.value)" ${checked[current]?'disabled':''}>${opts.map(v=>`<option value="${v}" ${((answers[current]||[])[ri]||'')===v?'selected':''}>${v||'Select...'}</option>`).join('')}</select>`;box.appendChild(row)})}
+ if(checked[current])showFeedback();const done=checked.filter(Boolean).length;document.getElementById('answered').textContent=`${done}/10`;document.getElementById('scoreLive').textContent=`Score: ${score}`;document.getElementById('bar').style.width=`${done/10*100}%`;document.getElementById('prevBtn').disabled=current===0;document.getElementById('nextBtn').classList.toggle('hidden',current===9);document.getElementById('finishBtn').classList.toggle('hidden',current!==9);document.getElementById('checkBtn').disabled=checked[current]}
+function selectOption(i){if(checked[current])return;const q=questions[current];if(q.type==='single')answers[current]=i;else{let a=answers[current]||[];a=a.includes(i)?a.filter(x=>x!==i):[...a,i];answers[current]=a}render()}
+function setRow(i,v){let a=answers[current]||[];a[i]=v;answers[current]=a}
+function isCorrect(i){const q=questions[i],a=answers[i];if(q.type==='single')return a===q.answer;if(q.type==='multiSelect')return Array.isArray(a)&&a.length===q.answer.length&&[...a].sort().every((v,j)=>v===[...q.answer].sort()[j]);if(q.type==='mapping'||q.type==='yesno')return Array.isArray(a)&&q.rows.every((r,j)=>a[j]===r.answer);return false}
+function hasAnswer(){const q=questions[current],a=answers[current];if(q.type==='single')return a!==null;if(q.type==='multiSelect')return Array.isArray(a)&&a.length>0;return Array.isArray(a)&&a.length===q.rows.length&&a.every(Boolean)}
+function checkAnswer(){if(!hasAnswer()){alert('Please answer the question first.');return}checked[current]=true;if(isCorrect(current))score++;render()}
+function showFeedback(){const q=questions[current],ok=isCorrect(current),f=document.getElementById('feedback');f.classList.remove('hidden');let wrong='';if(q.wrong)wrong=`<h4>Why the other choices are wrong</h4><ul>${q.wrong.map(x=>`<li>${x}</li>`).join('')}</ul>`;f.innerHTML=`<h3 class="${ok?'good':'bad'}">${ok?'Correct':'Incorrect'}</h3><p class="explain">${q.explanation}</p>${wrong}<div class="takeaway"><strong>Exam takeaway:</strong> ${q.takeaway}</div>`}
+function move(n){current=Math.max(0,Math.min(9,current+n));render();window.scrollTo({top:0,behavior:'smooth'})}
+function finishExam(){if(!checked[current]){alert('Check the current answer first.');return}document.getElementById('exam').classList.add('hidden');document.getElementById('result').classList.remove('hidden');const pct=Math.round(score/10*100);document.getElementById('finalScore').textContent=`${pct}%`;document.getElementById('grade').textContent=pct>=80?'Strong result. Continue with the next batch.':pct>=60?'Good start. Review your mistakes before continuing.':'Review the explanations carefully and retry this batch.';localStorage.setItem('ai103-batch1-score',pct)}
+function showReview(onlyWrong){document.getElementById('result').classList.add('hidden');document.getElementById('review').classList.remove('hidden');const list=document.getElementById('reviewList');list.innerHTML='';questions.forEach((q,i)=>{const ok=isCorrect(i);if(onlyWrong&&ok)return;const d=document.createElement('div');d.className='review-card';let your='';if(q.type==='single')your=answers[i]===null?'No answer':q.options[answers[i]];else if(q.type==='multiSelect')your=(answers[i]||[]).map(x=>q.options[x]).join(' + ')||'No answer';else your=(answers[i]||[]).join(' | ')||'No answer';let correct=q.type==='single'?q.options[q.answer]:q.type==='multiSelect'?q.answer.map(x=>q.options[x]).join(' + '):q.rows.map(r=>`${r.label}: ${r.answer}`).join('<br>');d.innerHTML=`<h3>Q${q.id}. ${q.question.replace(/\n/g,'<br>')}</h3><p class="${ok?'good':'bad'}"><strong>Your answer:</strong> ${your}</p><p class="good"><strong>Correct answer:</strong> ${correct}</p><p class="explain"><strong>Explanation:</strong> ${q.explanation}</p><div class="takeaway"><strong>Exam takeaway:</strong> ${q.takeaway}</div>`;list.appendChild(d)});if(!list.children.length)list.innerHTML='<div class="review-card"><p class="good">No mistakes.</p></div>'}
+function backToResult(){document.getElementById('review').classList.add('hidden');document.getElementById('result').classList.remove('hidden')}
+function restart(){current=0;answers=Array(10).fill(null);checked=Array(10).fill(false);score=0;document.getElementById('result').classList.add('hidden');document.getElementById('start').classList.remove('hidden')}
+</script>
+</body>
+</html>
